@@ -1,44 +1,16 @@
-// const searchField = document.getElementById("search-input");
-
-// searchField.addEventListener(
-//   "input",
-//   (handleSearch = () => {
-//     const searchText = searchField.value.trim();
-
-//     // If the search text is empty, display all data
-//     if (searchText === "") {
-//       profilesData();
-//     } else {
-//       //get the profiles data
-//       const url = `https://2023.projektbigfoot.de/api/v1/projects?query=${encodeURIComponent(
-//         searchText
-//       )}`;
-//       fetch(url)
-//         .then((res) => res.json())
-//         .then((data) => {
-//           const filteredData = data.filter((item) =>
-//             item.contestantName.toLowerCase().includes(searchText.toLowerCase())
-//           );
-//           displayProfiles(filteredData)
-//         });
-//     }
-//   })
-// );
-// //clear the searchfield
-// searchField.value = "";
-
-const profilesData = () => {
+const fetchProfilesData = () => {
   const url = `https://2023.projektbigfoot.de/api/v1/projects`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => displayProfiles(data));
+  return fetch(url).then((res) => res.json());
 };
-
-profilesData();
-
 
 const displayProfiles = (profiles) => {
   const tableContainer = document.getElementById("table-container");
+
+  // Check if tableContainer exists before proceeding
+  if (!tableContainer) {
+    return;
+  }
+  tableContainer.innerHTML = ""; // Clear the table container before displaying new data
 
   profiles.map((profile) => {
     const div = document.createElement("div");
@@ -47,25 +19,35 @@ const displayProfiles = (profiles) => {
       <tbody>
         <tr>
           <td>${profile?.rank + "."}</td>
-            <td>${profile?.voteCount}</td>
-            <td>
-                 <a href="./details.html">
-                   <h4>${profile?.contestantName}</h4>
-                   <p>${profile?.projectTitle}</p>
-                 </a>
-            </td>      
+          <td>${profile?.voteCount}</td>
+          <td onclick="getProfileData('${profile?._id}')">
+            <h4>${profile?.contestantName}</h4>
+            <p>${profile?.projectTitle}</p>
+          </td>      
         </tr>
-       <tbody>     
+      </tbody>     
     </table>     
     `;
     tableContainer.appendChild(div);
   });
 };
-const getProfileData = (id) => {
-  console.log(id)
-  const url = `https://2023.projektbigfoot.de/api/v1/projects/${id}`;
-  console.log(url)
-  fetch(url)
-    .then((res) => res.json())
-    .then((result) => console.log(result));
+
+const getProfileData = (profileId) => {
+  window.location.href = `./details.html?profileId=${profileId}`;
 };
+
+const params = new URLSearchParams(window.location.search);
+const profileId = params.get("profileId");
+
+if (profileId) {
+  const detailsContainer = document.getElementById("details-container");
+
+  const div = document.createElement("div");
+  div.innerHTML = `
+  <h1>Hello there</h1>
+  `;
+  detailsContainer.appendChild(div);
+}
+
+// Call the fetchProfilesData function to get all profiles data and display them when the page is loaded or reloaded
+fetchProfilesData().then((data) => displayProfiles(data));
