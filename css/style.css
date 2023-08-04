@@ -210,3 +210,10 @@ tbody tr td a {
 .profile-details .customer-logo{
   margin: 0 0 18.3px 0;
 }
+
+.media-gallery p{
+  color: red;
+  font-size: 24px;
+  line-height: 30px;
+  margin: 0;
+}

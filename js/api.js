@@ -18,11 +18,19 @@ const displayProfiles = (profiles) => {
     <table>
       <tbody>
         <tr>
-          <td>${profile?.rank + "."}</td>
-          <td>${profile?.voteCount}</td>
+          <td>${profile?.rank ? profile.rank : "Rang nicht gefunden"}.</td>
+          <td>${profile?.voteCount ? profile.voteCount : "0"}</td>
           <td onclick="getProfileData('${profile?._id}')">
-            <h4>${profile?.contestantName}</h4>
-            <p>${profile?.projectTitle}</p>
+            <h4>${
+              profile?.contestantName
+                ? profile.contestantName
+                : "Projektname Nicht gefunden"
+            }</h4>
+            <p>${
+              profile?.projectTitle
+                ? profile.projectTitle
+                : "Projekttitel Nicht gefunden"
+            }</p>
           </td>      
         </tr>
       </tbody>     
@@ -64,7 +72,7 @@ const showProfileDetails = (result) => {
             : "Projekttitel Nicht gefunden"
         }</h6>
         <p class="vote-count">${
-          result?.voteCount ? result.voteCount : "Nicht gefunden"
+          result?.voteCount ? result.voteCount : "0"
         } Stimmen</p>
         <button>Jetzt abstimmen!</button>
         <p class="recaptcha-text">
@@ -93,14 +101,17 @@ const showProfileDetails = (result) => {
            </div>
         </div>
         <div class="media-gallery">
-            <img class="img1" src="${result?.projectGallery[0]}" alt="">
-            <img class="img2" src="${result?.projectGallery[1]}" alt="">
-            <img class="img3" src="${result?.projectGallery[2]}" alt="">
-            <img class="img4" src="${result?.projectGallery[3]}" alt="">
-            <img class="img5" src="${result?.projectGallery[4]}" alt="">
-            <img class="img6" src="${result?.projectGallery[5]}" alt="">
-            <img class="img7" src="${result?.projectGallery[6]}" alt="">
-            <img class="img8" src="${result?.projectGallery[7]}" alt="">
+          ${
+            result?.projectGallery?.length > 0
+              ? result.projectGallery
+                  .slice(0, 8) // Display at most 8 images
+                  .map(
+                    (image, index) =>
+                      `<img class="img${index + 1}" src="${image}" alt="">`
+                  )
+                  .join("")
+              : "<p>No images found.</p>" /* Display a message when no images are available */
+          }
         </div>
      </div>
      <div class="customer-logo">
