@@ -1,6 +1,17 @@
-const fetchProfilesData = () => {
-  const url = `https://2023.projektbigfoot.de/api/v1/projects`;
-  return fetch(url).then((res) => res.json());
+const fetchProfilesData = async () => {
+  try {
+    const url = `https://2023.projektbigfoot.de/api/v1/projects`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data from the API.");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return []; // Return an empty array if there's an error, so displayProfiles will handle it gracefully
+  }
 };
 
 const displayProfiles = (profiles) => {
@@ -50,12 +61,30 @@ const profileId = params.get("profileId");
 if (profileId) {
   const url = `https://2023.projektbigfoot.de/api/v1/projects/${profileId}`;
   fetch(url)
-    .then((res) => res.json())
-    .then((result) => showProfileDetails(result));
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch data from the API.");
+      }
+      return res.json();
+    })
+    .then((result) => showProfileDetails(result))
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+      showProfileDetails(null); // Pass null to showProfileDetails to display an error message
+    });
 }
 
 const showProfileDetails = (result) => {
   const detailsContainer = document.getElementById("details-container");
+  detailsContainer.innerHTML = ""; // Clear the details container before displaying new data
+
+  if (!result) {
+    // If there's an error or data is not available, display an error message
+    const errorMessage = document.createElement("p");
+    errorMessage.textContent = "Error: Failed to fetch data from the API.";
+    detailsContainer.appendChild(errorMessage);
+    return;
+  }
 
   const div = document.createElement("div");
   div.innerHTML = `
@@ -121,6 +150,7 @@ const showProfileDetails = (result) => {
   `;
   detailsContainer.appendChild(div);
 };
+
 
 // Call the fetchProfilesData function to get all profiles data and display them when the page is loaded or reloaded
 fetchProfilesData().then((data) => displayProfiles(data));
