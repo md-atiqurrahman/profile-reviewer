@@ -26,26 +26,50 @@ const displayProfiles = (profiles) => {
   profiles.map((profile) => {
     const div = document.createElement("div");
     div.innerHTML = `
-    <table>
-      <tbody>
-        <tr>
-          <td>${profile?.rank ? profile.rank : "Rang nicht gefunden"}.</td>
-          <td>${profile?.voteCount ? profile.voteCount : "0"}</td>
-          <td onclick="getProfileData('${profile?._id}')">
-            <h4>${
-              profile?.contestantName
-                ? profile.contestantName
-                : "Projektname Nicht gefunden"
-            }</h4>
-            <p>${
-              profile?.projectTitle
-                ? profile.projectTitle
-                : "Projekttitel Nicht gefunden"
-            }</p>
-          </td>      
-        </tr>
-      </tbody>     
-    </table>     
+        <table class="table1">
+        <tbody>
+          <tr>
+            <td>
+               ${profile?.rank ? profile.rank : "Rang nicht gefunden"}.
+               <div class="vote-count">
+                 <span>${profile?.voteCount ? profile.voteCount : "0"}</span>
+               </div>
+            </td>
+            <td onclick="getProfileData('${profile?._id}')">
+              <h4>${
+                profile?.contestantName
+                  ? profile.contestantName
+                  : "Projektname Nicht gefunden"
+              }</h4>
+              <p>${
+                profile?.projectTitle
+                  ? profile.projectTitle
+                  : "Projekttitel Nicht gefunden"
+              }</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table2">
+        <tbody>
+          <tr>
+            <td>${profile?.rank ? profile.rank : "Rang nicht gefunden"}.</td>
+            <td>${profile?.voteCount ? profile.voteCount : "0"}</td>
+            <td onclick="getProfileData('${profile?._id}')">
+              <h4>${
+                profile?.contestantName
+                  ? profile.contestantName
+                  : "Projektname Nicht gefunden"
+              }</h4>
+              <p>${
+                profile?.projectTitle
+                  ? profile.projectTitle
+                  : "Projekttitel Nicht gefunden"
+              }</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     `;
     tableContainer.appendChild(div);
   });
@@ -113,7 +137,7 @@ const showProfileDetails = (result) => {
      <div>
         <div class="answer-container">
            <div>
-              <h3>Contestant Answer1:</h3>
+              <h3>Teilnehmerantwort 1:</h3>
               <p>${
                 result?.contestantAnswer1
                   ? result.contestantAnswer1
@@ -121,7 +145,7 @@ const showProfileDetails = (result) => {
               }</p>
            </div>
            <div>
-              <h3>Contestant Answer2:</h3>
+              <h3>Teilnehmerantwort 2:</h3>
               <p>${
                 result?.contestantAnswer2
                   ? result.contestantAnswer2
@@ -130,18 +154,21 @@ const showProfileDetails = (result) => {
            </div>
         </div>
         <div class="media-gallery">
-          ${
-            result?.projectGallery?.length > 0
-              ? result.projectGallery
-                  .slice(0, 8) // Display at most 8 images
-                  .map(
-                    (image, index) =>
-                      `<img class="img${index + 1}" src="${image}" alt="">`
-                  )
-                  .join("")
-              : "<p>No images found.</p>" /* Display a message when no images are available */
-          }
-        </div>
+  ${
+    result?.projectGallery?.length > 0
+      ? result.projectGallery
+          .slice(0, 8) // Display at most 8 images
+          .map(
+            (image, index) =>
+              `<img class="img${
+                index + 1
+              }" src="${image}" alt="" onerror="handleImageError(this)">`
+          )
+          .join("")
+      : "<p>No images found.</p>" /* Display a message when no images are available */
+  }
+</div>
+
      </div>
      <div class="customer-logo">
           <img src="./assets/customer-logo.png" alt="" />
@@ -151,6 +178,14 @@ const showProfileDetails = (result) => {
   detailsContainer.appendChild(div);
 };
 
+function handleImageError(img) {
+  // Replace the invalid image source with a default image URL
+  img.src = "./assets/defaultImage.png";
+
+  // Alternatively, you can set the image to display none or show an error message
+  // img.style.display = "none";
+  // img.alt = "Image not found";
+}
 
 // Call the fetchProfilesData function to get all profiles data and display them when the page is loaded or reloaded
 fetchProfilesData().then((data) => displayProfiles(data));
