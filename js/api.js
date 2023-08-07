@@ -28,14 +28,14 @@ const displayProfiles = (profiles) => {
     div.innerHTML = `
         <table class="table1">
         <tbody>
-          <tr>
+          <tr onclick="getProfileData('${profile?._id}')">
             <td>
                ${profile?.rank ? profile.rank : "Rang nicht gefunden"}.
                <div class="vote-count">
                  <span>${profile?.voteCount ? profile.voteCount : "0"}</span>
                </div>
             </td>
-            <td onclick="getProfileData('${profile?._id}')">
+            <td>
               <h4>${
                 profile?.contestantName
                   ? profile.contestantName
@@ -52,10 +52,10 @@ const displayProfiles = (profiles) => {
       </table>
       <table class="table2">
         <tbody>
-          <tr>
+          <tr onclick="getProfileData('${profile?._id}')">
             <td>${profile?.rank ? profile.rank : "Rang nicht gefunden"}.</td>
             <td>${profile?.voteCount ? profile.voteCount : "0"}</td>
-            <td onclick="getProfileData('${profile?._id}')">
+            <td>
               <h4>${
                 profile?.contestantName
                   ? profile.contestantName

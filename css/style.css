@@ -68,7 +68,9 @@ table {
 #table-container .table1 {
   display: none;
 }
-
+tr{
+  cursor: pointer;
+}
 td {
   padding: 22px 52px;
   border-bottom: 1px solid #ddd;
