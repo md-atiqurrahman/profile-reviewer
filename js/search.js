@@ -1,6 +1,6 @@
 // Function to handle the search input
 const handleSearch = () => {
-  const searchInput = document.getElementById("search-input");
+  const searchInput = document.getElementById("user-input");
   const searchText = searchInput.value.trim().toLowerCase(); // Get the search text and convert to lowercase
 
   // Function to check if the search input can be parsed as a number
@@ -36,5 +36,5 @@ const handleSearch = () => {
 };
 
 // Add event listener to search input field
-const searchInput = document.getElementById("search-input");
+const searchInput = document.getElementById("user-input");
 searchInput.addEventListener("input", handleSearch);
